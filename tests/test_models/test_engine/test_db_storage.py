@@ -96,6 +96,7 @@ class TestFileStorage(unittest.TestCase):
 class TestSQLQueries(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_get_id(self):
+        """ Test that gets the id """
         conn = mysql.connector.connect(host='localhost',
                                        user='hbnb_test',
                                        password='hbnb_test_pwd',
@@ -114,6 +115,7 @@ class TestSQLQueries(unittest.TestCase):
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_count_state(self):
+        """ Test that counts the state """
         conn = mysql.connector.connect(host='localhost',
                                        user='hbnb_test',
                                        password='hbnb_test_pwd',
