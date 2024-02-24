@@ -6,6 +6,7 @@ Contains the TestDBStorageDocs and TestDBStorage classes
 from datetime import datetime
 import inspect
 import models
+from models import storage
 from models.engine import db_storage
 from models.amenity import Amenity
 from models.base_model import BaseModel
@@ -18,6 +19,8 @@ import json
 import os
 import pep8
 import unittest
+import pymysql
+
 DBStorage = db_storage.DBStorage
 classes = {"Amenity": Amenity, "City": City, "Place": Place,
            "Review": Review, "State": State, "User": User}
@@ -86,3 +89,19 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
+
+
+class TestSQLQueries(unittest.TestCase):
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_get_id(self):
+        conn = pymysql.connect(host='localhost',
+                               user='hbnb_test',
+                               password='hbnb_test_pwd',
+                               db='hbnb_test_db')
+        cursor = conn.cursor()
+        state_id = '0e391e25-dd3a-45f4-bce3-4d1dea83f3c7'
+        cursor.execute(f"SELECT * FROM State WHERE id = {state_id} ")
+        result = cursor.fetchall()[0]
+        expected = storage.get(State, state_id)
+        self.assertEqual(result, expected)
+        conn.close()
