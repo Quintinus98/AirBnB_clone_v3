@@ -6,7 +6,6 @@ Contains the TestDBStorageDocs and TestDBStorage classes
 from datetime import datetime
 import inspect
 import models
-from models import storage
 from models.engine import db_storage
 from models.amenity import Amenity
 from models.base_model import BaseModel
@@ -19,9 +18,12 @@ import json
 import os
 import pep8
 import unittest
-import pymysql
+import mysql.connector
+
 
 DBStorage = db_storage.DBStorage
+storage = DBStorage()
+storage.reload()
 classes = {"Amenity": Amenity, "City": City, "Place": Place,
            "Review": Review, "State": State, "User": User}
 
@@ -94,14 +96,35 @@ class TestFileStorage(unittest.TestCase):
 class TestSQLQueries(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_get_id(self):
-        conn = pymysql.connect(host='localhost',
-                               user='hbnb_test',
-                               password='hbnb_test_pwd',
-                               db='hbnb_test_db')
+        conn = mysql.connector.connect(host='localhost',
+                                       user='hbnb_test',
+                                       password='hbnb_test_pwd',
+                                       db='hbnb_test_db')
         cursor = conn.cursor()
-        state_id = '0e391e25-dd3a-45f4-bce3-4d1dea83f3c7'
-        cursor.execute(f"SELECT * FROM State WHERE id = {state_id} ")
-        result = cursor.fetchall()[0]
-        expected = storage.get(State, state_id)
-        self.assertEqual(result, expected)
+        state_id = list(storage.all(State).values())[0].id
+        query = ("SELECT * FROM states WHERE id = %s")
+        cursor.execute(query, (state_id,))
+        expected = None
+        for name in cursor:
+            expected = name[len(name) - 1]
+        result = storage.get(State, state_id)
+        self.assertEqual(result.name, expected)
+        cursor.close()
+        conn.close()
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_count_state(self):
+        conn = mysql.connector.connect(host='localhost',
+                                       user='hbnb_test',
+                                       password='hbnb_test_pwd',
+                                       db='hbnb_test_db')
+        cursor = conn.cursor()
+        query = ("SELECT count(*) FROM states")
+        cursor.execute(query)
+        expected = None
+        for count in cursor:
+            expected = count
+        result = storage.count(State)
+        self.assertEqual(result, expected[0])
+        cursor.close()
         conn.close()

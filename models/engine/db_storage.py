@@ -5,7 +5,7 @@ Contains the class DBStorage
 
 import models
 from models.amenity import Amenity
-from models.base_model import BaseModel, Base
+from models.base_model import BaseModel
 from models.city import City
 from models.place import Place
 from models.review import Review
@@ -13,15 +13,17 @@ from models.state import State
 from models.user import User
 from os import getenv
 import sqlalchemy
-from sqlalchemy import create_engine, func, text
+from sqlalchemy import create_engine, func
 from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 
+Base = declarative_base()
 classes = {"Amenity": Amenity, "City": City,
            "Place": Place, "Review": Review, "State": State, "User": User}
 
 
 class DBStorage:
-    """interaacts with the MySQL database"""
+    """interacts with the MySQL database"""
     __engine = None
     __session = None
 
@@ -79,9 +81,9 @@ class DBStorage:
     def get(self, cls, id):
         """Retrieves one object"""
         if cls in classes.values():
-            objs = self.__session.query(cls).filter(id==id).first()
+            objs = self.__session.query(cls).filter(id == id).first()
             if (objs):
-                return objs    
+                return objs
         return None
 
     def count(self, cls=None):
@@ -89,7 +91,9 @@ class DBStorage:
         if cls is None:
             num = 0
             for clss in classes.values():
-                num += self.__session.query(func.count('*')).select_from(clss).scalar()
+                num += self.__session.query(func.count('*'))\
+                    .select_from(clss).scalar()
             return num
         if cls in classes.values():
-            return self.__session.query(func.count('*')).select_from(cls).scalar()
+            return self.__session.query(func.count('*'))\
+                .select_from(cls).scalar()
