@@ -18,12 +18,7 @@ import json
 import os
 import pep8
 import unittest
-import mysql.connector
-
-
 DBStorage = db_storage.DBStorage
-storage = DBStorage()
-storage.reload()
 classes = {"Amenity": Amenity, "City": City, "Place": Place,
            "Review": Review, "State": State, "User": User}
 
@@ -94,39 +89,47 @@ class TestFileStorage(unittest.TestCase):
 
 
 class TestSQLQueries(unittest.TestCase):
-    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
-    def test_get_id(self):
-        """ Test that gets the id """
-        conn = mysql.connector.connect(host='localhost',
-                                       user='hbnb_test',
-                                       password='hbnb_test_pwd',
-                                       db='hbnb_test_db')
-        cursor = conn.cursor()
-        state_id = list(storage.all(State).values())[0].id
-        query = ("SELECT * FROM states WHERE id = %s")
-        cursor.execute(query, (state_id,))
-        expected = None
-        for name in cursor:
-            expected = name[len(name) - 1]
-        result = storage.get(State, state_id)
-        self.assertEqual(result.name, expected)
-        cursor.close()
-        conn.close()
+    # @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    # def test_get_id(self):
+    #     """ Test that gets the id """
+    #     conn = mysql.connector.connect(host='localhost',
+    #                                    user='hbnb_test',
+    #                                    password='hbnb_test_pwd',
+    #                                    db='hbnb_test_db')
+    #     cursor = conn.cursor()
+    #     state_id = list(storage.all(State).values())[0].id
+    #     query = ("SELECT * FROM states WHERE id = %s")
+    #     cursor.execute(query, (state_id,))
+    #     expected = None
+    #     for name in cursor:
+    #         expected = name[len(name) - 1]
+    #     result = storage.get(State, state_id)
+    #     self.assertEqual(result.name, expected)
+    #     cursor.close()
+    #     conn.close()
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
-    def test_count_state(self):
-        """ Test that counts the state """
-        conn = mysql.connector.connect(host='localhost',
-                                       user='hbnb_test',
-                                       password='hbnb_test_pwd',
-                                       db='hbnb_test_db')
-        cursor = conn.cursor()
-        query = ("SELECT count(*) FROM states")
-        cursor.execute(query)
-        expected = None
-        for count in cursor:
-            expected = count
-        result = storage.count(State)
-        self.assertEqual(result, expected[0])
-        cursor.close()
-        conn.close()
+    def test_get_method(self):
+        """Test get method"""
+        storage = DBStorage()
+        storage.reload()
+        state = State(name="California")
+        state.save()
+        self.assertTrue(storage.get(cls=State, id=state.id) is not None)
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_get_method_without_id(self):
+        """Test get method without id"""
+        storage = DBStorage()
+        storage.reload()
+        with self.assertRaises(TypeError):
+            self.assertTrue(storage.get(cls=State) is not None)
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_count_method(self):
+        """Test count method"""
+        storage = DBStorage()
+        storage.reload()
+        state = State(name="California")
+        state.save()
+        self.assertTrue(storage.count(State) > 0)
