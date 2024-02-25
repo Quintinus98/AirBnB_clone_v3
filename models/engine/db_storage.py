@@ -80,20 +80,17 @@ class DBStorage:
     # New functions to define
     def get(self, cls, id):
         """Retrieves one object"""
-        if cls in classes.values():
-            objs = self.__session.query(cls).filter(id == id).first()
-            if (objs):
-                return objs
+        if cls not in classes.values():
+            return None
+        all_id = self.all(cls)
+        for value in all_id.values():
+            if (value.id == id):
+                return value
         return None
 
     def count(self, cls=None):
         """Returns the number of objects in storage"""
         if cls is None:
-            num = 0
-            for clss in classes.values():
-                num += self.__session.query(func.count('*'))\
-                    .select_from(clss).scalar()
-            return num
+            return len(self.all())
         if cls in classes.values():
-            return self.__session.query(func.count('*'))\
-                .select_from(cls).scalar()
+            return len(self.all(cls))

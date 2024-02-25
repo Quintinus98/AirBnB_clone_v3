@@ -72,19 +72,17 @@ class FileStorage:
     # New functions to define
     def get(self, cls, id):
         """Retrieves one object"""
-        for key, value in self.__objects.items():
-            if cls == value.__class__ or cls == value.__class__.__name__:
-                if (value.id == id):
-                    return self.__objects[key]
+        if cls not in classes.values():
+            return None
+        all_id = self.all(cls)
+        for value in all_id.values():
+            if (value.id == id):
+                return value
         return None
 
     def count(self, cls=None):
         """Returns the number of objects in storage"""
         if cls is None:
-            return (len(self.__objects))
+            return len(self.all())
         if cls in classes.values():
-            count = 0
-            for value in self.__objects.values():
-                if cls == value.__class__ or cls == value.__class__.__name__:
-                    count += 1
-            return (count)
+            return len(self.all(cls))
