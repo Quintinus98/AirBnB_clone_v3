@@ -16,18 +16,17 @@ classes = {"amenities": Amenity, "cities": City,
            "states": State, "users": User}
 
 
-@app_views.route('/status', methods=['GET'], strict_slashes=False)
+@app_views.route('/status', methods=["GET"])
 def status():
     """Returns a JSON"""
     return jsonify({"status": "OK"})
 
 
-@app_views.route('/stats', methods=['GET'], strict_slashes=False)
+@app_views.route('/stats', methods=["GET"])
 def stats():
     """Retrieves endpoint"""
     template = {}
     for key, value in classes.items():
         total = storage.count(value)
         template[key] = total
-
     return jsonify(template)
