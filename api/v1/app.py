@@ -23,6 +23,7 @@ def teardown_storage(exception):
 
 @app.errorhandler(404)
 def page_not_found(error):
+    """Error handler"""
     return jsonify({"error": "Not found"}), 404
 
 
