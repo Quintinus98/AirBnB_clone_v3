@@ -6,6 +6,7 @@ Contains the TestDBStorageDocs and TestDBStorage classes
 from datetime import datetime
 import inspect
 import models
+from models import storage
 from models.engine import db_storage
 from models.amenity import Amenity
 from models.base_model import BaseModel
@@ -87,49 +88,25 @@ class TestFileStorage(unittest.TestCase):
     def test_save(self):
         """Test that save properly saves objects to file.json"""
 
-
-class TestSQLQueries(unittest.TestCase):
-    # @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
-    # def test_get_id(self):
-    #     """ Test that gets the id """
-    #     conn = mysql.connector.connect(host='localhost',
-    #                                    user='hbnb_test',
-    #                                    password='hbnb_test_pwd',
-    #                                    db='hbnb_test_db')
-    #     cursor = conn.cursor()
-    #     state_id = list(storage.all(State).values())[0].id
-    #     query = ("SELECT * FROM states WHERE id = %s")
-    #     cursor.execute(query, (state_id,))
-    #     expected = None
-    #     for name in cursor:
-    #         expected = name[len(name) - 1]
-    #     result = storage.get(State, state_id)
-    #     self.assertEqual(result.name, expected)
-    #     cursor.close()
-    #     conn.close()
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_get_id_match(self):
+        """ Tests method for obtaining an instance db storage"""
+        dic = {"name": "Lagos"}
+        instance = State(**dic)
+        storage.new(instance)
+        storage.save()
+        get_instance = storage.get(State, instance.id)
+        self.assertEqual(get_instance, instance)
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
-    def test_get_method(self):
-        """Test get method"""
-        storage = DBStorage()
-        storage.reload()
-        state = State(name="California")
-        state.save()
-        self.assertTrue(storage.get(cls=State, id=state.id) is not None)
-
-    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
-    def test_get_method_without_id(self):
-        """Test get method without id"""
-        storage = DBStorage()
-        storage.reload()
-        with self.assertRaises(TypeError):
-            self.assertTrue(storage.get(cls=State) is not None)
-
-    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
-    def test_count_method(self):
-        """Test count method"""
-        storage = DBStorage()
-        storage.reload()
-        state = State(name="California")
-        state.save()
-        self.assertTrue(storage.count(State) > 0)
+    def test_count(self):
+        """ Tests count method db storage """
+        dic = {"name": "Enugu"}
+        state = State(**dic)
+        storage.new(state)
+        dic = {"name": "Edo", "state_id": state.id}
+        city = City(**dic)
+        storage.new(city)
+        storage.save()
+        c = storage.count()
+        self.assertEqual(len(storage.all()), c)
