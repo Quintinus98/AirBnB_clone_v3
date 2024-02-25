@@ -23,7 +23,7 @@ def status():
 
 
 @app_views.route('/stats', methods=['GET'], strict_slashes=False)
-def retrieve_endpoint():
+def stats():
     """Retrieves endpoint"""
     template = {}
     for key, value in classes.items():
