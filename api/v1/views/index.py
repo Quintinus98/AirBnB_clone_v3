@@ -22,7 +22,7 @@ def status():
     return jsonify({"status": "OK"})
 
 
-@app_views.route('/stats')
+@app_views.route('/stats', methods=['GET'])
 def retrieve_endpoint():
     """Retrieves endpoint"""
     template = {
