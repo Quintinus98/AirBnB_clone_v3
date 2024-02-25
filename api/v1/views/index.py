@@ -20,10 +20,9 @@ def status():
 @app_views.route('/stats', methods=["GET"], strict_slashes=False)
 def stats():
     """Retrieves endpoint"""
-    classes = {"amenities": Amenity, "cities": City,
-               "places": Place, "reviews": Review,
-               "states": State, "users": User}
+    classes = [Amenity, City, Place, Review, State, User]
+    f = ["amenities", "cities", "places", "reviews", "states", "users"]
     template = {}
-    for key, value in classes.items():
-        template[key] = storage.count(value)
-    return jsonify(template), 200
+    for i in range(len(f)):
+        template[f[i]] = storage.count(classes[i])
+    return jsonify(template)
