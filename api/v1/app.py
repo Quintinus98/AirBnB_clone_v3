@@ -3,6 +3,11 @@
 from flask import Flask
 from models import storage
 from api.v1.views import app_views
+from os import getenv
+
+
+HBNB_API_HOST = getenv('HBNB_API_HOST')
+HBNB_API_PORT = getenv('HBNB_API_PORT')
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
@@ -17,4 +22,8 @@ def teardown_storage(exception):
 
 
 if __name__ == "__main__":
-    app.run('0.0.0.0', 5000, threaded=True, debug=True)
+    if not HBNB_API_HOST:
+        HBNB_API_HOST = '0.0.0.0'
+    if not HBNB_API_PORT:
+        HBNB_API_PORT = 5000
+    app.run(HBNB_API_HOST, HBNB_API_PORT, threaded=True, debug=True)
