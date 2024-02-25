@@ -81,8 +81,8 @@ class DBStorage:
         """Retrieves one object"""
         if cls not in classes.values():
             return None
-        all_id = self.all(cls)
-        for value in all_id.values():
+        all_instance = self.all(cls)
+        for value in all_instance.values():
             if (value.id == id):
                 return value
         return None
@@ -93,3 +93,4 @@ class DBStorage:
             return len(self.all())
         if cls in classes.values():
             return len(self.all(cls))
+        return (0)
