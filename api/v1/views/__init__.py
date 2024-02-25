@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+""" INIT module """
 from flask import Blueprint
 from api.v1.views.index import *
 
