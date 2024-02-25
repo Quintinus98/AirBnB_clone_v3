@@ -11,22 +11,19 @@ from models.state import State
 from models.user import User
 
 
-classes = {"amenities": Amenity, "cities": City,
-           "places": Place, "reviews": Review,
-           "states": State, "users": User}
-
-
-@app_views.route('/status', methods=["GET"])
+@app_views.route('/status', methods=["GET"], strict_slashes=False)
 def status():
     """Returns a JSON"""
     return jsonify({"status": "OK"}), 200
 
 
-@app_views.route('/stats', methods=["GET"])
+@app_views.route('/stats', methods=["GET"], strict_slashes=False)
 def stats():
     """Retrieves endpoint"""
+    classes = {"amenities": Amenity, "cities": City,
+               "places": Place, "reviews": Review,
+               "states": State, "users": User}
     template = {}
     for key, value in classes.items():
-        total = storage.count(value)
-        template[key] = total
+        template[key] = storage.count(value)
     return jsonify(template), 200
