@@ -91,8 +91,8 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_get_id_match(self):
         """ Tests method for obtaining an instance db storage"""
-        dic = {"name": "Lagos"}
-        instance = State(**dic)
+        attr = {"name": "Lagos"}
+        instance = State(**attr)
         storage.new(instance)
         storage.save()
         get_instance = storage.get(State, instance.id)
@@ -101,12 +101,12 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_count(self):
         """ Tests count method db storage """
-        dic = {"name": "Enugu"}
-        state = State(**dic)
+        attr = {"name": "Enugu"}
+        state = State(**attr)
         storage.new(state)
-        dic = {"name": "Edo", "state_id": state.id}
-        city = City(**dic)
+        attr = {"name": "PortHarcourt", "state_id": state.id}
+        city = City(**attr)
         storage.new(city)
         storage.save()
-        c = storage.count()
-        self.assertEqual(len(storage.all()), c)
+        cnt = storage.count()
+        self.assertEqual(len(storage.all()), cnt)
