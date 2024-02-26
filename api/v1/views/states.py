@@ -6,7 +6,7 @@ from models.state import State
 from models import storage
 
 
-@app_views.route('/states', methods=["GET"], strict_slashes=False)
+@app_views.route('/states', methods=["GET"])
 def all_states():
     """Gets all States"""
     states = storage.all(State).values()
@@ -14,18 +14,16 @@ def all_states():
     return jsonify(array)
 
 
-@app_views.route('/states/<state_id>', methods=["GET"],
-                 strict_slashes=False)
+@app_views.route('/states/<state_id>', methods=["GET"])
 def get_state(state_id):
     """Gets a State"""
     state = storage.get(State, state_id)
-    if state:
-        return jsonify(state.to_dict())
-    abort(404)
+    if not state:
+        abort(404)
+    return jsonify(state.to_dict())
 
 
-@app_views.route('/states/<state_id>', methods=["DELETE"],
-                 strict_slashes=False)
+@app_views.route('/states/<state_id>', methods=["DELETE"])
 def delete_state(state_id):
     """Deletes a State"""
     state = storage.get(State, state_id)
@@ -33,11 +31,10 @@ def delete_state(state_id):
         abort(404)
     storage.delete(state)
     storage.save()
-    return (jsonify({}), 200)
+    return jsonify({}), 200
 
 
-@app_views.route('/states', methods=["POST"],
-                 strict_slashes=False)
+@app_views.route('/states', methods=["POST"])
 def post_state():
     """Posts a State"""
     request_data = request.get_json()
@@ -50,8 +47,7 @@ def post_state():
     return jsonify(instance.to_dict()), 201
 
 
-@app_views.route('/states/<state_id>', methods=["PUT"],
-                 strict_slashes=False)
+@app_views.route('/states/<state_id>', methods=["PUT"])
 def put_state(state_id):
     """Puts / Updates a State"""
     state = storage.get(State, state_id)
@@ -62,10 +58,10 @@ def put_state(state_id):
     if not request_data:
         abort(400, description="Not a JSON")
 
-    attr_ignore = ['id', 'created_at', 'updated_at']
+    ignore_keys = ['id', 'created_at', 'updated_at']
 
     for k, v in request_data.items():
-        if k not in attr_ignore:
+        if k not in ignore_keys:
             setattr(state, k, v)
     storage.save()
     return jsonify(state.to_dict()), 200
