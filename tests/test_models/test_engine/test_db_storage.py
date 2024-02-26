@@ -6,7 +6,6 @@ Contains the TestDBStorageDocs and TestDBStorage classes
 from datetime import datetime
 import inspect
 import models
-from models import storage
 from models.engine import db_storage
 from models.amenity import Amenity
 from models.base_model import BaseModel
@@ -19,6 +18,7 @@ import json
 import os
 import pep8
 import unittest
+from models import storage
 DBStorage = db_storage.DBStorage
 classes = {"Amenity": Amenity, "City": City, "Place": Place,
            "Review": Review, "State": State, "User": User}
@@ -88,25 +88,23 @@ class TestFileStorage(unittest.TestCase):
     def test_save(self):
         """Test that save properly saves objects to file.json"""
 
-    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
-    def test_get_id_match(self):
+    def test_get_db(self):
         """ Tests method for obtaining an instance db storage"""
-        attr = {"name": "Lagos"}
-        instance = State(**attr)
+        dic = {"name": "Lagos"}
+        instance = State(**dic)
         storage.new(instance)
         storage.save()
         get_instance = storage.get(State, instance.id)
         self.assertEqual(get_instance, instance)
 
-    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_count(self):
         """ Tests count method db storage """
-        attr = {"name": "Enugu"}
-        state = State(**attr)
+        dic = {"name": "Enugu"}
+        state = State(**dic)
         storage.new(state)
-        attr = {"name": "PortHarcourt", "state_id": state.id}
-        city = City(**attr)
+        dic = {"name": "Niger", "state_id": state.id}
+        city = City(**dic)
         storage.new(city)
         storage.save()
-        cnt = storage.count()
-        self.assertEqual(len(storage.all()), cnt)
+        c = storage.count()
+        self.assertEqual(len(storage.all()), c)
