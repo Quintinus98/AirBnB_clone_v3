@@ -1,15 +1,8 @@
 #!/usr/bin/python3
 """ Apps Index """
 from api.v1.views import app_views
-from models.amenity import Amenity
-from models.city import City
 from flask import jsonify
-from models.place import Place
-from models.review import Review
-from models.state import State
-from models import storage
-from models.user import User
-
+import models
 
 classes = {"amenities": "Amenity", "cities": "City", "places": "Place",
            "reviews": "Review", "states": "State", "users": "User"}
@@ -26,5 +19,5 @@ def count():
     '''retrieves the number of each objects by type'''
     count_dict = {}
     for cls in classes:
-        count_dict[cls] = storage.count(classes[cls])
+        count_dict[cls] = models.storage.count(classes[cls])
     return jsonify(count_dict)
