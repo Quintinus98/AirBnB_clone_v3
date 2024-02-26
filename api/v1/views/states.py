@@ -41,7 +41,7 @@ def post_state():
     """Posts a State"""
     request_data = request.get_json()
     if not request_data:
-        abort(404, description="Not a JSON")
+        abort(400, description="Not a JSON")
     if not request_data["name"]:
         abort(400, description="Missing name")
     instance = State(**request_data)
