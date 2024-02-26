@@ -86,6 +86,6 @@ class FileStorage:
         """Returns the number of objects in storage"""
         if cls is None:
             return len(models.storage.all())
-        if cls in classes.values():
+        if (cls in classes.values() or cls in classes.keys()):
             return len(models.storage.all(cls))
         return (0)
