@@ -2,10 +2,17 @@
 """ Apps Index """
 from api.v1.views import app_views
 from flask import jsonify
-import models
+from models import storage
+from models.amenity import Amenity
+from models.city import City
+from models.place import Place
+from models.review import Review
+from models.state import State
+from models.user import User
 
-classes = {"amenities": "Amenity", "cities": "City", "places": "Place",
-           "reviews": "Review", "states": "State", "users": "User"}
+
+classes = {"amenities": Amenity, "cities": City, "places": Place,
+           "reviews": Review, "states": State, "users": User}
 
 
 @app_views.route('/status', methods=["GET"])
@@ -15,9 +22,7 @@ def status():
 
 
 @app_views.route('/stats', methods=['GET'])
-def count():
+def number_objects():
     '''retrieves the number of each objects by type'''
-    count_dict = {}
-    for cls in classes:
-        count_dict[cls] = models.storage.count(classes[cls])
-    return jsonify(count_dict)
+    temp = {k: storage.count(v) for k, v in classes.items()}
+    return jsonify(temp)
