@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """ Apps API """
-from flask import Flask, jsonify, make_response
+from flask import Flask, jsonify
 from models import storage
 from api.v1.views import app_views
 from os import getenv
@@ -23,7 +23,7 @@ def teardown_storage(exception):
 @app.errorhandler(404)
 def page_not_found(error):
     """Error handler"""
-    return make_response(jsonify({"error": "Not found"}), 404)
+    return jsonify({"error": "Not found"}), 404
 
 
 if __name__ == "__main__":
