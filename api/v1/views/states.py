@@ -14,7 +14,8 @@ def all_states():
     return jsonify(array)
 
 
-@app_views.route('/states/<state_id>', methods=["GET"], strict_slashes=False)
+@app_views.route('/states/<state_id>', methods=["GET"],
+                 strict_slashes=False)
 def get_state(state_id):
     """Gets a State"""
     state = storage.get(State, state_id)
@@ -41,7 +42,7 @@ def post_state():
     """Posts a State"""
     request_data = request.get_json()
     if not request_data:
-        abort(404, description="Not a JSON")
+        abort(400, description="Not a JSON")
     if not request_data["name"]:
         abort(400, description="Missing name")
     instance = State(**request_data)
