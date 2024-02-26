@@ -9,7 +9,8 @@ from datetime import datetime
 import uuid
 
 
-@app_views.route("/states/<state_id>/cities", methods=["Get"])
+@app_views.route("/states/<state_id>/cities", methods=["GET"])
+@app_views.route("/states/<state_id>/cities/", methods=["GET"])
 def all_cities(state_id):
     """Gets all cities"""
     cities = storage.all(City).values()
@@ -24,6 +25,7 @@ def all_cities(state_id):
 
 
 @app_views.route("/cities/<city_id>", methods=["GET"])
+@app_views.route("/cities/<city_id>/", methods=["GET"])
 def get_city(city_id):
     """Retrieves city object"""
     city = storage.get(City, city_id)
