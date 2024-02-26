@@ -3,7 +3,7 @@
 from api.v1.views import app_views
 from models.amenity import Amenity
 from models.city import City
-from flask import jsonify
+from flask import jsonify, request
 from models.place import Place
 from models.review import Review
 from models.state import State
@@ -25,7 +25,8 @@ def stats():
                "places": Place,
                "reviews": Review,
                "states": State,
-               "users": User
-               }
-    tmp = {k: storage.count(v) for k, v in classes.items()}
-    return jsonify(tmp)
+               "users": User}
+    if request.method == 'GET':
+        tmp = {k: storage.count(v) for k, v in classes.items()}
+        return jsonify(tmp)
+    return jsonify({})
