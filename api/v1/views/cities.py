@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """ Cities Views"""
 from api.v1.views import app_views
-from flask import jsonify, abort, request
+from flask import abort, jsonify, make_response, request
 from models.city import City
 from models import storage
 from models.state import State
@@ -41,7 +41,7 @@ def delete_city(city_id):
     if city:
         storage.delete(city)
         storage.save()
-        return ((jsonify({})), 200)
+        return make_response((jsonify({})), 200)
     abort(404)
 
 
@@ -59,7 +59,7 @@ def post_city(state_id):
     data_request['state_id'] = state_id
     new_city = City(**data_request)
     new_city.save()
-    return jsonify(new_city.to_dict()), 201
+    return make_response(jsonify(new_city.to_dict()), 201)
 
 
 @app_views.route("/cities/<city_id>", methods=["PUT"])
@@ -75,5 +75,5 @@ def put_city(city_id):
             if k not in attr_ignore:
                 setattr(city, k, v)
             storage.save()
-        return jsonify(city.to_dict()), 200
+        return make_response(jsonify(city.to_dict()), 200)
     abort(404)

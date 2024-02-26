@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """ amenities Views """
 from api.v1.views import app_views
-from flask import jsonify, abort, request
+from flask import abort, jsonify, make_response, request
 from models import storage
 from models.amenity import Amenity
 from datetime import datetime
@@ -33,7 +33,7 @@ def delete_amenity(amenity_id):
         abort(404)
     storage.delete(amenity)
     storage.save()
-    return jsonify({}), 200
+    return make_response(jsonify({}), 200)
 
 
 @app_views.route('/amenities', methods=["POST"])
@@ -49,7 +49,7 @@ def create_amenity():
     instance = Amenity(**request_data)
     storage.new(instance)
     storage.save()
-    return jsonify(instance.to_dict()), 201
+    return make_response(jsonify(instance.to_dict()), 201)
 
 
 @app_views.route('/amenities/<amenity_id>', methods=["PUT"])
@@ -69,4 +69,4 @@ def update_amenity(amenity_id):
         if k not in ignore_keys:
             setattr(amenity, k, v)
     storage.save()
-    return jsonify(amenity.to_dict()), 200
+    return make_response(jsonify(amenity.to_dict()), 200)
