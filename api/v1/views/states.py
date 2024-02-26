@@ -7,6 +7,7 @@ from models.state import State
 from datetime import datetime
 import uuid
 
+
 @app_views.route('/states/', methods=["GET"])
 def all_states():
     """Gets all States"""
