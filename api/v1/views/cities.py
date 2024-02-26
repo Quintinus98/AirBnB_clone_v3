@@ -16,7 +16,8 @@ def all_cities(state_id):
     if not state:
         abort(404)
     if cities:
-        for city in cities:        city_array = [city.to_dict()]
+        for city in cities:
+            city_array = [city.to_dict()]
         return jsonify(city_array)
     abort(404)
 
@@ -70,7 +71,7 @@ def put_city(city_id):
         data_request = request.get_json()
         if not data_request:
             abort(400, description="Not a Json")
-        attr_ignore = ['id', 'state_id','created_at', 'updated_at']
+        attr_ignore = ['id', 'state_id', 'created_at', 'updated_at']
         for k, v in data_request.items():
             if k not in attr_ignore:
                 setattr(city, k, v)

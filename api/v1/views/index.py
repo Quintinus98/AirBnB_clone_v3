@@ -11,6 +11,10 @@ from models import storage
 from models.user import User
 
 
+classes = {"amenities": Amenity, "cities": City, "places": Place,
+           "reviews": Review, "states": State, "users": User}
+
+
 @app_views.route('/status', methods=["GET"])
 def status():
     """Returns a JSON"""
@@ -18,13 +22,9 @@ def status():
 
 
 @app_views.route('/stats', methods=["GET"])
-def stats():
+def count():
     """Retrieves endpoint"""
-    classes = {"amenities": Amenity,
-               "cities": City,
-               "places": Place,
-               "reviews": Review,
-               "states": State,
-               "users": User}
-    tmp = {k: storage.count(classes[k]) for k in classes}
+    tmp = {}
+    for key in classes:
+        tmp[key] = storage.count(classes[key])
     return jsonify(tmp)
