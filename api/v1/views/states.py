@@ -6,7 +6,7 @@ from models.state import State
 from models import storage
 
 
-@app_views.route('/states', methods=["GET"])
+@app_views.route('/states/', methods=["GET"])
 def all_states():
     """Gets all States"""
     states = storage.all(State).values()
@@ -37,10 +37,10 @@ def delete_state(state_id):
 @app_views.route('/states', methods=["POST"])
 def post_state():
     """Posts a State"""
-    request_data = request.get_json()
-    if not request_data:
+    if not request.is_json:
         abort(400, description="Not a JSON")
-    if not request_data["name"]:
+    request_data = request.get_json()
+    if "name" not in request_data:
         abort(400, description="Missing name")
     instance = State(**request_data)
     storage.new(instance)
@@ -55,9 +55,9 @@ def put_state(state_id):
     if not state:
         abort(404)
 
-    request_data = request.get_json()
-    if not request_data:
+    if not request.is_json:
         abort(400, description="Not a JSON")
+    request_data = request.get_json()
 
     ignore_keys = ['id', 'created_at', 'updated_at']
 
