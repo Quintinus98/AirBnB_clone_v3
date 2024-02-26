@@ -49,7 +49,8 @@ def post_user():
 
     request_data = request.get_json()
     instance = User(**request_data)
-    instance.save()
+    storage.new(instance)
+    storage.save()
     return make_response(jsonify(instance.to_dict()), 201)
 
 
