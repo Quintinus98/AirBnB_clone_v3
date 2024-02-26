@@ -8,7 +8,6 @@ from datetime import datetime
 import uuid
 
 
-@app_views.route('/amenities', methods=["GET"])
 @app_views.route('/amenities/', methods=["GET"])
 def all_amenities():
     """Gets all amenities"""
@@ -17,7 +16,6 @@ def all_amenities():
     return jsonify(array)
 
 
-@app_views.route('/amenities/<amenity_id>', methods=["GET"])
 @app_views.route('/amenities/<amenity_id>/', methods=["GET"])
 def get_amenity(amenity_id):
     """Gets an amenity"""
@@ -43,9 +41,11 @@ def create_amenity():
     """Posts an amenity"""
     if not request.is_json:
         abort(400, description="Not a JSON")
+
     request_data = request.get_json()
     if "name" not in request_data:
         abort(400, description="Missing name")
+
     instance = Amenity(**request_data)
     storage.new(instance)
     storage.save()
