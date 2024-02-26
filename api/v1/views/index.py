@@ -23,8 +23,8 @@ def status():
 
 @app_views.route('/stats', methods=["GET"])
 def count():
-    """Retrieves endpoint"""
+    """Retrieves the number of each objects by type"""
     tmp = {}
-    for key in classes:
-        tmp[key] = storage.count(classes[key])
+    for cls in classes:
+        tmp[cls] = storage.count(classes[cls])
     return jsonify(tmp)
