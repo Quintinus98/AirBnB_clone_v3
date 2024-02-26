@@ -1,19 +1,17 @@
 #!/usr/bin/python3
 """ States Views """
-from api.v1.views import app_views
-from flask import jsonify, abort, request
-from models import storage
 from models.state import State
-from datetime import datetime
-import uuid
+from models import storage
+from api.v1.views import app_views
+from flask import abort, jsonify, make_response, request
 
 
-@app_views.route('/states/', methods=["GET"])
+@app_views.route('/states', methods=["GET"])
 def all_states():
     """Gets all States"""
     states = storage.all(State).values()
-    array = [state.to_dict() for state in states]
-    return jsonify(array)
+    list_states = [state.to_dict() for state in states]
+    return jsonify(list_states)
 
 
 @app_views.route('/states/<state_id>', methods=["GET"])
