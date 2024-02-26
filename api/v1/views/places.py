@@ -1,8 +1,10 @@
 #!/usr/bin/python3
-""" places API """
+""" Places API """
+from models.state import State
 from models.city import City
 from models.place import Place
 from models.user import User
+from models.amenity import Amenity
 from models import storage
 from api.v1.views import app_views
 from flask import abort, jsonify, make_response, request
