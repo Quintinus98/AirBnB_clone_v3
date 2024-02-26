@@ -4,6 +4,8 @@ from api.v1.views import app_views
 from flask import jsonify, abort, request
 from models.state import State
 from models import storage
+import uuid
+from datetime import datetime
 
 
 @app_views.route('/states', methods=["GET"])
@@ -43,7 +45,8 @@ def post_state():
     if not request_data["name"]:
         abort(400, description="Missing name")
     instance = State(**request_data)
-    instance.save()
+    storage.new(instance)
+    storage.save()
     return jsonify(instance.to_dict()), 201
 
 
